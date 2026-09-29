@@ -16,9 +16,11 @@ function togglePasswordVisibility(input, button) {
 // LOGIN PAGE
 // ==========================================
 
-const loginForm = document.getElementById("loginForm");
+const loginForm =
+  document.getElementById("loginForm");
 
-const loginPassword = document.getElementById("password");
+const loginPassword =
+  document.getElementById("password");
 
 const toggleLoginPassword =
   document.getElementById("togglePassword");
@@ -28,14 +30,17 @@ const toggleLoginPassword =
 
 if (toggleLoginPassword && loginPassword) {
 
-  toggleLoginPassword.addEventListener("click", () => {
+  toggleLoginPassword.addEventListener(
+    "click",
+    () => {
 
-    togglePasswordVisibility(
-      loginPassword,
-      toggleLoginPassword
-    );
+      togglePasswordVisibility(
+        loginPassword,
+        toggleLoginPassword
+      );
 
-  });
+    }
+  );
 
 }
 
@@ -44,51 +49,144 @@ if (toggleLoginPassword && loginPassword) {
 
 if (loginForm) {
 
-  loginForm.addEventListener("submit", (event) => {
+  loginForm.addEventListener(
+    "submit",
+    async (event) => {
 
-    event.preventDefault();
-
-
-    const email =
-      document
-        .getElementById("email")
-        .value
-        .trim();
+      event.preventDefault();
 
 
-    const passwordValue =
-      loginPassword.value;
+      const email =
+        document
+          .getElementById("email")
+          .value
+          .trim();
 
 
-    const error =
-      document.getElementById("loginError");
+      const passwordValue =
+        loginPassword.value;
 
 
-    // Clear old error
+      const error =
+        document.getElementById("loginError");
 
-    error.textContent = "";
+
+      const loginButton =
+        document.getElementById("loginButton");
 
 
-    // Validate fields
+      // Clear previous error
 
-    if (!email || !passwordValue) {
+      error.textContent = "";
 
-      error.textContent =
-        "Please enter your email and password.";
 
-      return;
+      // ======================================
+      // VALIDATION
+      // ======================================
+
+      if (!email || !passwordValue) {
+
+        error.textContent =
+          "Please enter your email and password.";
+
+        return;
+
+      }
+
+
+      // ======================================
+      // START LOADING
+      // ======================================
+
+      loginButton.disabled = true;
+
+      loginButton.textContent =
+        "Logging in...";
+
+
+      try {
+
+        // ======================================
+        // SUPABASE LOGIN
+        // ======================================
+
+        const {
+          data,
+          error: loginError
+        } =
+          await supabaseClient.auth.signInWithPassword({
+
+            email: email,
+
+            password: passwordValue
+
+          });
+
+
+        // ======================================
+        // LOGIN ERROR
+        // ======================================
+
+        if (loginError) {
+
+          console.error(
+            "Login error:",
+            loginError
+          );
+
+
+          error.textContent =
+            loginError.message;
+
+
+          loginButton.disabled = false;
+
+          loginButton.textContent =
+            "Login";
+
+
+          return;
+
+        }
+
+
+        // ======================================
+        // LOGIN SUCCESS
+        // ======================================
+
+        console.log(
+          "Login successful:",
+          data.user
+        );
+
+
+        // Go to home page
+
+        window.location.href =
+          "index.html";
+
+
+      } catch (err) {
+
+        console.error(
+          "Unexpected login error:",
+          err
+        );
+
+
+        error.textContent =
+          "Something went wrong. Please try again.";
+
+
+        loginButton.disabled = false;
+
+        loginButton.textContent =
+          "Login";
+
+      }
 
     }
-
-
-    console.log("Login form working");
-
-
-    alert(
-      "Login page is working. Supabase will be connected next."
-    );
-
-  });
+  );
 
 }
 
@@ -163,7 +261,7 @@ if (signupForm) {
 
   signupForm.addEventListener(
     "submit",
-    (event) => {
+    async (event) => {
 
       event.preventDefault();
 
@@ -201,6 +299,12 @@ if (signupForm) {
       const message =
         document.getElementById(
           "signupMessage"
+        );
+
+
+      const signupButton =
+        document.getElementById(
+          "signupButton"
         );
 
 
@@ -317,25 +421,153 @@ if (signupForm) {
 
 
       // ======================================
-      // SUCCESS
+      // START LOADING
       // ======================================
 
-      console.log(
-        "Signup form working",
-        {
-          displayName,
-          username,
-          email
+      signupButton.disabled = true;
+
+      signupButton.textContent =
+        "Creating account...";
+
+
+      try {
+
+        // ======================================
+        // CREATE SUPABASE ACCOUNT
+        // ======================================
+
+        const {
+          data,
+          error: signupError
+        } =
+          await supabaseClient.auth.signUp({
+
+            email: email,
+
+            password: passwordValue,
+
+            options: {
+
+              data: {
+
+                display_name:
+                  displayName,
+
+                username:
+                  username
+
+              }
+
+            }
+
+          });
+
+
+        // ======================================
+        // SIGNUP ERROR
+        // ======================================
+
+        if (signupError) {
+
+          console.error(
+            "Signup error:",
+            signupError
+          );
+
+
+          message.textContent =
+            signupError.message;
+
+
+          message.classList.add(
+            "error-message"
+          );
+
+
+          signupButton.disabled =
+            false;
+
+
+          signupButton.textContent =
+            "Create Account";
+
+
+          return;
+
         }
-      );
 
 
-      message.textContent =
-        "Signup form is working!";
+        // ======================================
+        // SIGNUP SUCCESS
+        // ======================================
 
-      message.classList.add(
-        "success-message"
-      );
+        console.log(
+          "Account created:",
+          data.user
+        );
+
+
+        message.textContent =
+          "Account created successfully! Check your email if verification is required.";
+
+
+        message.classList.add(
+          "success-message"
+        );
+
+
+        signupButton.disabled =
+          false;
+
+
+        signupButton.textContent =
+          "Create Account";
+
+
+        // If Supabase automatically created
+        // a logged-in session, send user home.
+
+        if (data.session) {
+
+          setTimeout(() => {
+
+            window.location.href =
+              "index.html";
+
+          }, 1000);
+
+        }
+
+
+      } catch (err) {
+
+        // ======================================
+        // UNEXPECTED ERROR
+        // ======================================
+
+        console.error(
+          "Unexpected signup error:",
+          err
+        );
+
+
+        message.textContent =
+          "Something went wrong. Please try again.";
+
+
+        message.classList.add(
+          "error-message"
+        );
+
+
+        signupButton.disabled =
+          false;
+
+
+        signupButton.textContent =
+          "Create Account";
+
+      }
 
     }
   );
