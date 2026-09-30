@@ -8,18 +8,293 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>Loading...</title>
+  <title>Home</title>
 
-  <meta
-    http-equiv="refresh"
-    content="0; url=login.html"
+  <link
+    rel="stylesheet"
+    href="style.css"
   >
 </head>
 
-<body>
-  <p>
-    Redirecting to login...
-    <a href="login.html">Continue</a>
-  </p>
+<body class="app-page">
+
+  <!-- Loading screen -->
+
+  <div
+    id="appLoading"
+    class="app-loading"
+  >
+    <div class="loading-spinner"></div>
+    <p>Loading...</p>
+  </div>
+
+
+  <!-- Main application -->
+
+  <div
+    id="mainApp"
+    class="app-layout hidden"
+  >
+
+    <!-- LEFT SIDEBAR -->
+
+    <aside class="sidebar">
+
+      <div class="sidebar-logo">
+        💬
+      </div>
+
+
+      <nav class="sidebar-nav">
+
+        <button
+          class="nav-item active"
+          data-page="friends"
+        >
+          <span class="nav-icon">👥</span>
+          <span>Friends</span>
+        </button>
+
+
+        <button
+          class="nav-item"
+          data-page="messages"
+        >
+          <span class="nav-icon">💬</span>
+          <span>Messages</span>
+        </button>
+
+
+        <button
+          class="nav-item"
+          data-page="calls"
+        >
+          <span class="nav-icon">📞</span>
+          <span>Calls</span>
+        </button>
+
+
+        <button
+          class="nav-item"
+          data-page="games"
+        >
+          <span class="nav-icon">🎮</span>
+          <span>Games</span>
+        </button>
+
+      </nav>
+
+
+      <div class="sidebar-bottom">
+
+        <button
+          class="nav-item"
+          data-page="settings"
+        >
+          <span class="nav-icon">⚙️</span>
+          <span>Settings</span>
+        </button>
+
+      </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+      <!-- TOP BAR -->
+
+      <header class="topbar">
+
+        <div>
+
+          <h1 id="pageTitle">
+            Friends
+          </h1>
+
+          <p class="topbar-subtitle">
+            Connect with your friends
+          </p>
+
+        </div>
+
+
+        <div class="topbar-actions">
+
+          <button
+            class="icon-button"
+            id="notificationButton"
+            title="Notifications"
+          >
+            🔔
+          </button>
+
+
+          <button
+            class="profile-button"
+            id="profileButton"
+          >
+
+            <div
+              class="profile-avatar"
+              id="userAvatar"
+            >
+              U
+            </div>
+
+            <div class="profile-info">
+
+              <strong id="displayName">
+                User
+              </strong>
+
+              <span id="username">
+                @username
+              </span>
+
+            </div>
+
+          </button>
+
+        </div>
+
+      </header>
+
+
+      <!-- PAGE CONTENT -->
+
+      <section class="content-area">
+
+        <div class="welcome-card">
+
+          <div>
+
+            <p class="eyebrow">
+              WELCOME
+            </p>
+
+            <h2>
+              Hey,
+              <span id="welcomeName">
+                there
+              </span>
+              👋
+            </h2>
+
+            <p>
+              Your account is ready. Next we'll
+              start building your friends system.
+            </p>
+
+          </div>
+
+          <div class="welcome-art">
+            💬
+          </div>
+
+        </div>
+
+
+        <!-- FRIEND CONTROLS -->
+
+        <div class="friends-header">
+
+          <div class="friends-tabs">
+
+            <button
+              class="friend-tab active"
+            >
+              Online
+            </button>
+
+            <button class="friend-tab">
+              All
+            </button>
+
+            <button class="friend-tab">
+              Pending
+            </button>
+
+            <button
+              class="friend-tab add-friend-tab"
+              id="addFriendButton"
+            >
+              Add Friend
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- EMPTY STATE -->
+
+        <div class="empty-state">
+
+          <div class="empty-icon">
+            👥
+          </div>
+
+          <h3>
+            No friends yet
+          </h3>
+
+          <p>
+            Add some friends and they'll appear here.
+          </p>
+
+          <button
+            class="primary-action"
+            id="emptyAddFriendButton"
+          >
+            Add Friend
+          </button>
+
+        </div>
+
+      </section>
+
+    </main>
+
+
+    <!-- USER MENU -->
+
+    <div
+      id="userMenu"
+      class="user-menu hidden"
+    >
+
+      <button id="viewProfileButton">
+        👤 Profile
+      </button>
+
+      <button id="settingsButton">
+        ⚙️ Settings
+      </button>
+
+      <div class="menu-divider"></div>
+
+      <button
+        id="logoutButton"
+        class="logout-menu-button"
+      >
+        ↪ Logout
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+  ></script>
+
+  <script src="supabase.js"></script>
+
+  <script src="home.js"></script>
+
 </body>
 </html>
